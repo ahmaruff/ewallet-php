@@ -76,7 +76,14 @@ test('users can update role', function () {
         'remove_role_name' => ['user'],
     ]);
 
-    $response->assertStatus(302); // redirect
+    $response->assertRedirect(route('dashboard', absolute: false));
+
+    // Assert that the success message is flashed to the session
+    $response->assertSessionHas('success', 'User roles updated successfully.');
+
+    // Optionally, you can also assert that there are no validation errors
+    $response->assertSessionHasNoErrors();
+
     $user->load('roles');
 
     expect($user->hasRole(Role::ROLE_USER))->toBeFalse();
