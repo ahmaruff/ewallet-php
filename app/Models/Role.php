@@ -10,6 +10,9 @@ class Role extends Model
 {
     use HasUlids;
 
+    const ROLE_ADMIN = 'admin';
+    const ROLE_USER = 'user';
+
     /**
      * The attributes that are mass assignable.
      *
