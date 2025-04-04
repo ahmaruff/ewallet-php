@@ -71,8 +71,8 @@ class RegisteredUserController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if($validator->fails()) {
-            throw new ValidationException($validator);
-            
+            return redirect()->back()->withInput()->withErrors($validator);
+            // throw new ValidationException($validator);
         }
 
         $validated = $validator->validated();
@@ -91,6 +91,6 @@ class RegisteredUserController extends Controller
             $user->roles()->detach($rolesToRemove);
         }
 
-        return redirect()->back()->with('success', 'User roles updated successfully.');
+        return to_route('dashboard')->with('success', 'User roles updated successfully.');
     }
 }
