@@ -9,6 +9,11 @@ class Transaction extends Model
 {
     use HasUlids;
 
+    public const TYPE_DEPOSIT = 'deposit';
+    public const TYPE_WITHDRAWAL = 'withdrawal';
+    public const TYPE_TRANSFER_IN = 'transfer_in';
+    public const TYPE_TRANSFER_OUT = 'transfer_out';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -32,6 +37,7 @@ class Transaction extends Model
     {
         return [
             'meta' => 'array',
+            'amount' => 'decimal,2',
         ];
     }
 }
