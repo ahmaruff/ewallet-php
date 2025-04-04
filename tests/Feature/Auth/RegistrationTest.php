@@ -89,3 +89,30 @@ test('users can update role', function () {
     expect($user->hasRole(Role::ROLE_USER))->toBeFalse();
     expect($user->hasRole(Role::ROLE_ADMIN))->toBeTrue();
 });
+
+test('users get redirected back with errors on invalid input', function () {
+    // Ensure 'user' and 'admin' roles exist
+    Role::firstOrCreate(['name' => Role::ROLE_ADMIN]);
+    Role::firstOrCreate(['name' => Role::ROLE_USER]);
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    $response = $this->post('/roles/update-user-roles', [
+        'user_id' => $user->id,
+        'add_role_name' => ['nonexistent-role'], // Invalid role name
+    ]);
+
+    $response->assertStatus(302);
+
+    $response->assertRedirect('/'); // Adjust '/' to the expected previous URL if different
+
+    // Assert that validation errors are flashed to the session
+    $response->assertSessionHasErrors(['add_role_name.0']);
+
+    $response->assertSessionHas('_old_input');
+
+    // Further assertions to check that roles were NOT updated...
+    $user->load('roles');
+    expect($user->roles)->toBeEmpty();
+});
