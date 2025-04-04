@@ -20,6 +20,19 @@ class Wallet extends Model
         'balance'
     ];
 
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'balance' => 'decimal,2',
+        ];
+    }
+
+
     public function user() : BelongsTo
     {
         return $this->belongsTo(User::class);
