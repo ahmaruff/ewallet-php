@@ -37,7 +37,7 @@ class Transaction extends Model
     {
         return [
             'meta' => 'array',
-            'amount' => 'decimal,2',
+            'amount' => 'decimal:2',
         ];
     }
 }
