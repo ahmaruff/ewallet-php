@@ -35,6 +35,15 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    // ROLEs
+    Route::group([
+        'prefix' => 'roles',
+        'as' => 'roles.'
+    ], function() {
+        Route::post('/update-user-roles', [RegisteredUserController::class, 'updateUserRoles'])
+            ->name('update-user-roles');
+    });
+
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');
 
