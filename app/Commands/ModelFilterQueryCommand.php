@@ -47,6 +47,6 @@ class ModelFilterQueryCommand
 
     public static function paginate(Builder $query, $perPage=10, $page=1) : LengthAwarePaginator
     {
-        return $query->paginate($perPage,['*'],'page', $page);
+        return $query->paginate($perPage,['*'],'page', $page)->withQueryString();
     }
 }
