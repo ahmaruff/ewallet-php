@@ -30,7 +30,7 @@ class DashboardController extends Controller
         }
 
         $data = [
-            'balance' => $balance
+            'balance' => (float) $balance
         ];
 
         $this->logService->status('success')

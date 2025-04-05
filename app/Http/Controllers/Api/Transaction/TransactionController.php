@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\LogService;
 use App\Services\WalletService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +23,6 @@ class TransactionController extends Controller
     public function deposit(Request $request)
     {
         $rules = [
-            'user_id' => ['required', 'exists:users,id'],
             'amount' => ['required', 'numeric'],
         ];
 
@@ -34,7 +34,8 @@ class TransactionController extends Controller
 
         $validated = $validator->validated();
 
-        $user = User::findOrFail($validated['user_id']);
+        $user = Auth::user();
+
         if($user->wallet) {
             $wallet = $user->wallet; 
         } else {
