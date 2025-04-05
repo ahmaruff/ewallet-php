@@ -7,6 +7,7 @@ import {Card, CardHeader, CardContent, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { WalletMinimal, HandCoins } from 'lucide-vue-next';
 import DepositModal from '@/components/modal/DepositModal.vue';
+import WithdrawModal from '@/components/modal/WithdrawModal.vue';
 
 const props = defineProps<{
     balance: number
@@ -22,6 +23,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 const showDeposit = ref(false);
 
 const handleDeposit = (amount: number) => {
+  console.log('Deposit submitted with amount:', amount);
+  // Kirim ke server via Inertia/Axios
+};
+
+const showWithdraw = ref(false);
+
+const handleWithdraw = (amount: number) => {
   console.log('Deposit submitted with amount:', amount);
   // Kirim ke server via Inertia/Axios
 };
@@ -48,11 +56,12 @@ const handleDeposit = (amount: number) => {
                     <Button variant="outline" @click="showDeposit = true">
                         <WalletMinimal /> Deposit
                     </Button>
-                    <Button variant="secondary">
+                    <Button variant="secondary" @click="showWithdraw = true">
                         <HandCoins /> Withdraw
                     </Button>
                 </div>
                 <DepositModal v-model="showDeposit" @submit="handleDeposit" />
+                <WithdrawModal v-model="showWithdraw" @submit="handleWithdraw" />
             </div>
             <div class="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border md:min-h-min">
                 
