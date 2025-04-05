@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import {Card, CardHeader, CardContent, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { WalletMinimal, HandCoins } from 'lucide-vue-next';
+import DepositModal from '@/components/modal/DepositModal.vue';
 
 const props = defineProps<{
     balance: number
@@ -16,6 +18,13 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
 ];
+
+const showDeposit = ref(false);
+
+const handleDeposit = (amount: number) => {
+  console.log('Deposit submitted with amount:', amount);
+  // Kirim ke server via Inertia/Axios
+};
 
 </script>
 
@@ -36,13 +45,14 @@ const breadcrumbs: BreadcrumbItem[] = [
                     </CardContent>
                 </Card>
                 <div class="flex flex-col justify-center items-start gap-4">
-                    <Button variant="outline" @click="showDepositModal = true" >
+                    <Button variant="outline" @click="showDeposit = true">
                         <WalletMinimal /> Deposit
                     </Button>
                     <Button variant="secondary">
                         <HandCoins /> Withdraw
                     </Button>
                 </div>
+                <DepositModal v-model="showDeposit" @submit="handleDeposit" />
             </div>
             <div class="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border md:min-h-min">
                 
