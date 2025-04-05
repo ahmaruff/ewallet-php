@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Services\LogService;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,10 +16,6 @@ use Inertia\Response;
 
 class NewPasswordController extends Controller
 {
-    public function __construct(
-        protected LogService $logService
-    ) {}
-
     /**
      * Show the password reset page.
      */
@@ -39,8 +34,6 @@ class NewPasswordController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $this->logService->request($request)->task('update_password')->start();
-
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
@@ -66,23 +59,8 @@ class NewPasswordController extends Controller
         // the application's home authenticated view. If there is an error we can
         // redirect them back to where they came from with their error message.
         if ($status == Password::PasswordReset) {
-            $this->logService->status('fail')
-                ->code(500)
-                ->level('debug')
-                ->message('failed to update password')
-                ->response(['status' => $status])
-                ->save();
-
             return to_route('login')->with('status', __($status));
         }
-
-        $this->logService->status('success')
-            ->code(200)
-            ->level('info')
-            ->message('success update password')
-            ->response(['status' => $status])
-            ->save();
-                
 
         throw ValidationException::withMessages([
             'email' => [__($status)],
