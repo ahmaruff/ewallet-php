@@ -93,10 +93,50 @@ const handleDeposit = async (amount: number) => {
     }
 };
 
-const handleWithdraw = (amount: number) => {
+
+const handleWithdraw = async (amount: number) => {
     console.log('Withdraw submitted with amount:', amount);
-    // Implementasi withdraw
+
+    const token = getXSRFToken();
+
+    if (!token) {
+        console.error('CSRF token not found.');
+        alert('Token CSRF tidak ditemukan');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/transactions/withdraw', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-XSRF-TOKEN': token,
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+                amount: amount,
+            }),
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            console.error('Withdraw failed:', error);
+            alert(error.message || 'Terjadi kesalahan saat melakukan penarikan.');
+            return;
+        }
+
+        const data = await response.json();
+        console.log('Withdraw success:', data);
+
+        currentBalance.value = data.data.balance;
+        showWithdraw.value = false;
+    } catch (error) {
+        console.error('Error submitting withdraw:', error);
+        alert('Terjadi kesalahan jaringan atau server tidak merespons.');
+    }
 };
+
 </script>
 
 <template>
