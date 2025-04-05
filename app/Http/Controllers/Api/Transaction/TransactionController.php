@@ -49,7 +49,7 @@ class TransactionController extends Controller
                 $data = [
                     'transaction' => $trx,
                     'user_id' => $user,
-                    'balance' => $wallet->balance
+                    'balance' => (float) $wallet->balance
                 ];
 
                 $this->logService->status('success')
