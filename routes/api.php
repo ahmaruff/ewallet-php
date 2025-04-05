@@ -15,4 +15,6 @@ Route::group([
     'middleware' => ['auth:sanctum'],
 ], function() {
     Route::post('deposit', [\App\Http\Controllers\Api\Transaction\TransactionController::class,'deposit'])->name('deposit');
+    Route::post('withdraw', [\App\Http\Controllers\Api\Transaction\TransactionController::class,'withdraw'])->name('withdraw');
+
 });
