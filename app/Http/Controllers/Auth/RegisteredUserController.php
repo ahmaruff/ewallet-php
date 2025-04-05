@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\LogService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,6 +20,10 @@ use Inertia\Response;
 
 class RegisteredUserController extends Controller
 {
+    public function __construct(
+        protected LogService $logService
+    ) {}
+
     /**
      * Show the registration page.
      */
@@ -34,6 +39,8 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $this->logService->request($request)->task('register_new_user')->start();
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
@@ -55,11 +62,19 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+        $this->logService->status('success')
+            ->code(201)
+            ->level('info')
+            ->response(['user' => $user])
+            ->save();
+
         return to_route('dashboard');
     }
 
     public function updateUserRoles(Request $request)
     {
+        $this->logService->request($request)->task('update_user_roles')->start();
+
         $rules = [
             'user_id' => ['required', 'exists:users,id'],
             'add_role_name' => ['sometimes', 'nullable', 'array'],
@@ -90,6 +105,12 @@ class RegisteredUserController extends Controller
             $rolesToRemove = Role::whereIn('name', $validated['remove_role_name'])->pluck('roles.id')->toArray();
             $user->roles()->detach($rolesToRemove);
         }
+
+        $this->logService->status('success')
+            ->code(200)
+            ->level('info')
+            ->response(['user' => $user, 'roles' => $user->roles ?? null])
+            ->save();
 
         return to_route('dashboard')->with('success', 'User roles updated successfully.');
     }
