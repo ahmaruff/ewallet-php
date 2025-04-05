@@ -41,16 +41,25 @@ class RegisteredUserController extends Controller
     {
         $this->logService->request($request)->task('register_new_user')->start();
 
-        $request->validate([
-            'name' => 'required|string|max:255',
+        $rules = [
+           'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+            // throw new ValidationException($validator);
+        }
+
+        $validated = $validator->validated();
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
         ]);
 
         // default roles
