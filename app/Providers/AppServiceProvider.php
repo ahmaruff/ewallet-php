@@ -2,7 +2,8 @@
 
 namespace App\Providers;
 
-use App\Services\WalletService;
+use App\Services\AgentService;
+use App\Services\LogService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -12,8 +13,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(WalletService::class, function($app) {
-            return new WalletService();
+        $this->app->bind(AgentService::class, function($app) {
+            return new AgentService();
+        });
+
+        $this->app->bind(LogService::class, function($app) {
+            return new LogService($app->make(AgentService::class));
         });
     }
 
