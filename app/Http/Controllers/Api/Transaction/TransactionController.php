@@ -22,6 +22,8 @@ class TransactionController extends Controller
 
     public function deposit(Request $request)
     {
+        $this->logService->request($request)->task('deposit')->start();
+        
         $rules = [
             'amount' => ['required', 'numeric'],
         ];
