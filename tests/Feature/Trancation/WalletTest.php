@@ -62,3 +62,38 @@ test('user deposit money less than or equal to 0, throw error amount', function 
     expect(fn () => $walletService->depositFunds($wallet, $amount, 'user deposit -50000'))
         ->toThrow(Exception::class, 'Amount value cannot be less than or equal to 0');
 });
+
+
+test('user withdraw money, then balance decreased', function() {
+    $user = User::factory()->create();
+    $walletService = app(WalletService::class);
+
+    $wallet = $walletService->createWalletForUser($user,100000.00);
+
+    $amount = 10000.00;
+
+    $transaction = $walletService->withdrawFunds($wallet, $amount, "user withdraw 10000");
+
+    expect($transaction)->toBeInstanceOf(Transaction::class);
+    expect($transaction->type)->toBe(Transaction::TYPE_WITHDRAWAL);
+    expect((string) $transaction->amount)->toBe('10000.00');
+    $wallet->refresh();
+
+    expect($wallet->balance)->toBe('90000.00');
+});
+
+test('user withdraw money more than wallet balance or less than or equal to 0, throw error amount', function () {
+    $user = User::factory()->create();
+    $walletService = app(WalletService::class);
+
+    $wallet = $walletService->createWalletForUser($user,100000.00);
+    $amount = 120000.00;
+
+    expect(fn () => $walletService->withdrawFunds($wallet, $amount, "user withdraw 120000"))
+        ->toThrow(Exception::class, 'Amount value cannot be greater than wallet balance');
+
+    $amount = -50000;
+
+    expect(fn () => $walletService->depositFunds($wallet, $amount, 'user withdraw -50000'))
+        ->toThrow(Exception::class, 'Amount value cannot be less than or equal to 0');
+});
