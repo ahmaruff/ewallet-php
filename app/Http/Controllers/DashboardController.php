@@ -33,12 +33,12 @@ class DashboardController extends Controller
             'balance' => (float) $balance
         ];
 
-        $this->logService->status('success')
-            ->code(Response::HTTP_OK)
-            ->level('info')
-            ->message('get dashboard success')
-            ->response($data)
-            ->save();
+        // $this->logService->status('success')
+        //     ->code(Response::HTTP_OK)
+        //     ->level('info')
+        //     ->message('get dashboard success')
+        //     ->response($data)
+        //     ->save();
         
         return Inertia::render('Dashboard', $data);
     }

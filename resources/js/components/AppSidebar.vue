@@ -3,10 +3,19 @@ import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
+import { type NavItem, User } from '@/types';
 import { Link } from '@inertiajs/vue3';
 import { LayoutGrid, Wallet } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
+import { usePage } from '@inertiajs/vue3';
+
+// Get the user info from the page props (inertia)
+const { user } = usePage().props as unknown as { user: User };
+
+// Check if the user has the 'admin' role
+const isAdmin = user && user.roles?.some(role => role.name === 'admin');
+
+console.log(isAdmin);
 
 const mainNavItems: NavItem[] = [
     {
@@ -20,6 +29,14 @@ const mainNavItems: NavItem[] = [
         icon: Wallet,
     },
 ];
+
+if (isAdmin) {
+    mainNavItems.push({
+        title: 'Admin Dashboard',
+        href: '/admin/dashboard',
+        icon: LayoutGrid,
+    });
+}
 
 const footerNavItems: NavItem[] = [
     // {

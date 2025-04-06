@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem, Transaction, PaginationInfo } from '@/types';
 import { Head, usePage, router } from '@inertiajs/vue3';
 import { ref, computed } from 'vue'
 import { Card, CardHeader, CardContent, CardTitle } from '../components/ui/card';
@@ -13,23 +13,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     href: '/transaction',
   },
 ];
-
-interface Transaction {
-  id: string
-  type: 'deposit' | 'withdrawal' | 'transfer_in' | 'transfer_out'
-  amount: number
-  created_at: string
-  description?: string
-}
-
-interface PaginationInfo {
-  current_page: number
-  total_pages: number
-  per_page: number
-  next_page_url: string | null
-  previous_page_url: string | null
-  total: number
-}
 
 interface PageProps {
   transactions: Transaction[]
