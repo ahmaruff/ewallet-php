@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem, Transaction } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import { Card, CardHeader, CardContent, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { WalletMinimal, HandCoins } from 'lucide-vue-next';
 import DepositModal from '@/components/modal/DepositModal.vue';
 import WithdrawModal from '@/components/modal/WithdrawModal.vue';
+import TransactionItem from '@/components/TransactionItem.vue'
 
 const props = defineProps<{
-  balance: number;
+  balance: number,
+  recent_transactions: Transaction[],
 }>();
 
 const currentBalance = ref<number>(props.balance);
@@ -167,9 +169,25 @@ const handleWithdraw = async (amount: number) => {
                 <DepositModal v-model="showDeposit" @submit="handleDeposit" />
                 <WithdrawModal v-model="showWithdraw" @submit="handleWithdraw" />
             </div>
-            <div class="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border md:min-h-min">
-                    <!-- Placeholder konten -->
-            </div>
+            <!-- recent -->
+            <Card>
+                <CardHeader>
+                <CardTitle>Recent Transaction</CardTitle>
+                </CardHeader>
+                <CardContent>
+                <div v-if="props.recent_transactions?.length === 0" class="text-gray-500">
+                    No transactions found.
+                </div>
+
+                <ul v-else class="space-y-3">
+                    <TransactionItem
+                    v-for="transaction in props.recent_transactions"
+                    :key="transaction.id"
+                    :transaction="transaction"
+                    />
+                </ul>
+                </CardContent>
+            </Card>
         </div>
     </AppLayout>
 </template>

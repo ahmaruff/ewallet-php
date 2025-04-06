@@ -3,7 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem} from '@/types';
 import { Head} from '@inertiajs/vue3';
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
-import TransactionItem from '@/components/TransactionItem.vue'
+import TransactionChart from '@/components/TransactionChart.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -67,24 +67,12 @@ const formatCurrency = (value: number | string) => {
           </CardContent>
         </Card>
       </div>
-
-      <!-- recent -->
       <Card>
         <CardHeader>
-          <CardTitle>Recent Transaction</CardTitle>
+          <CardTitle>Transaction from last 30 days</CardTitle>
         </CardHeader>
         <CardContent>
-          <div v-if="props.recent_transactions?.length === 0" class="text-gray-500">
-            No transactions found.
-          </div>
-
-          <ul v-else class="space-y-3">
-            <TransactionItem
-              v-for="transaction in props.recent_transactions"
-              :key="transaction.id"
-              :transaction="transaction"
-            />
-          </ul>
+          <TransactionChart />
         </CardContent>
       </Card>
     </div>
