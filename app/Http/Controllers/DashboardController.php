@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transaction;
 use App\Models\Wallet;
 use App\Services\LogService;
 use Illuminate\Http\Request;
@@ -27,10 +28,13 @@ class DashboardController extends Controller
         $balance = 0;
         if($wallet) {
             $balance = $wallet->balance;
+            $recentTransactions = Transaction::where('wallet_id',$wallet->id)->orderBy('created_at', 'desc')->limit(5)->get();
         }
 
+
         $data = [
-            'balance' => (float) $balance
+            'balance' => (float) $balance,
+            'recent_transactions' => $recentTransactions ?? [],
         ];
 
         // $this->logService->status('success')
