@@ -11,6 +11,7 @@ This application includes features such as:
 - Deposit and withdrawal features with validation
 - Transaction history tracking
 - Unit and feature tests using Pest and PHPUnit
+- Transaction chart
 
 ## Technologies Used
 - Laravel 12 (Backend)
@@ -79,6 +80,8 @@ composer run dev
 ```
 
 ## API Documentation
+This APIs uses `Laravel Sanctum` for authentication. I haven’t implemented token-based authentication in this app yet, so the APIs are not fully stateless.
+
 ### POST /api/transactions/deposit
 This endpoint allows users to deposit funds into their wallet.
 
@@ -154,8 +157,113 @@ Accept: application/json
 
 ```
 
+
+### GET /api/transactions/get-chart
+This endpoint allows users to retrive transaction chart.
+
+##### Request
+
+```
+GET /api/transactions/get-chart
+Content-Type: application/json
+Accept: application/json
+
+// optional
+{
+  "user": "sfwgsdsgdgsdgsdg",
+  "start_date" : "2025-01-01",
+  "end_date" : "2025-03-01",
+}
+
+```
+##### Response
+
+```
+{
+    "status": "success",
+    "code": 200,
+    "message": "success",
+    "data": {
+        "labels": [
+            "2025-03-07",
+            "2025-03-08",
+            "2025-03-09",
+            "2025-03-10",
+            "2025-03-11",
+            "2025-03-12",
+            "2025-03-13",
+            "2025-03-14",
+            "2025-03-15",
+            "2025-03-16",
+            "2025-03-17",
+            "2025-03-18",
+            "2025-03-19",
+            "2025-03-20",
+            "2025-03-21",
+            "2025-03-22",
+            "2025-03-23",
+            "2025-03-24",
+            "2025-03-25",
+            "2025-03-26",
+            "2025-03-27",
+            "2025-03-28",
+            "2025-03-29",
+            "2025-03-30",
+            "2025-03-31",
+            "2025-04-01",
+            "2025-04-02",
+            "2025-04-03",
+            "2025-04-04",
+            "2025-04-05",
+            "2025-04-06"
+        ],
+        "data": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            2486,
+            100
+        ]
+    }
+}
+
+```
+
 ## Testing
 You can run the application's tests using Pest. Tests are located in the tests directory.
 ```
 ./vendor/bin/pest
 ```
+
+## Admin Account
+
+email : `admin@admin.com`  
+password: `12345678`
+
+admin dashboard url: `/admin/dashboard`
