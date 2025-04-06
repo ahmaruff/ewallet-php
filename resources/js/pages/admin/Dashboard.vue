@@ -67,26 +67,6 @@ const formatCurrency = (value: number | string) => {
           </CardContent>
         </Card>
       </div>
-
-      <!-- recent -->
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Transaction</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div v-if="props.recent_transactions?.length === 0" class="text-gray-500">
-            No transactions found.
-          </div>
-
-          <ul v-else class="space-y-3">
-            <TransactionItem
-              v-for="transaction in props.recent_transactions"
-              :key="transaction.id"
-              :transaction="transaction"
-            />
-          </ul>
-        </CardContent>
-      </Card>
     </div>
   </AppLayout>
 </template>
