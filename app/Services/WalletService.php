@@ -9,6 +9,15 @@ use Illuminate\Support\Facades\DB;
 
 class WalletService
 {
+    protected $paymentGatewayService;
+    protected $logService;
+
+    public function __construct(PaymentGatewayService $paymentGatewayService, LogService $logService)
+    {
+        $this->paymentGatewayService = $paymentGatewayService;
+        $this->logService = $logService;
+    }
+
     public function createWalletForUser(User $user, float $initialBalance = 0.00): ?Wallet
     {
         return DB::transaction(function () use ($user, $initialBalance) {
@@ -38,6 +47,19 @@ class WalletService
     {
         if ($amount <= 0) {
             throw new Exception("Amount value cannot be less than or equal to 0");
+        }
+
+        // Proceed with calling the payment gateway service
+        $paymentRequestData = [
+            'order_id' => uniqid('order_'),
+            'amount' => $amount,
+            'timestamp' => now()->toDateTimeString(),
+        ];
+
+        $paymentResponse = $this->paymentGatewayService->deposit($paymentRequestData);
+
+        if ($paymentResponse['status'] !== 1) {
+            throw new Exception("Payment gateway failed. Response: " . json_encode($paymentResponse));
         }
 
         return DB::transaction(function () use ($wallet, $amount, $description) {

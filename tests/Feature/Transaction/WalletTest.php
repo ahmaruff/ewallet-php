@@ -3,6 +3,7 @@
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Wallet;
+use App\Services\PaymentGatewayService;
 use App\Services\WalletService;
 
 test('create wallet for the user', function() {
@@ -31,6 +32,20 @@ test('create wallet for the user - returns null if wallet already exists', funct
 
 test('user deposit money, then balance increased', function() {
     $user = User::factory()->create();
+
+    // Mock the PaymentGatewayService
+    $paymentGatewayServiceMock = Mockery::mock(PaymentGatewayService::class);
+    $paymentGatewayServiceMock->shouldReceive('deposit')
+        ->once()
+        ->andReturn([
+            'order_id' => '12345',
+            'amount' => 100000,
+            'status' => 1, // Success
+        ]);
+
+    // Bind the mock PaymentGatewayService to the container
+    $this->app->instance(PaymentGatewayService::class, $paymentGatewayServiceMock);
+
     $walletService = app(WalletService::class);
 
     $wallet = $walletService->createWalletForUser($user,0.00);
