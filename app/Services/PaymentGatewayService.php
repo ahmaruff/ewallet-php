@@ -39,6 +39,10 @@ class PaymentGatewayService
         $validated = $validator->validated();
 
         try {
+            // THIS IS ONLY FOR MOCKING THE BEHAVIOUR
+            // UNCOMMENTS ONLY WHEN NEEDED.
+            // return $this->alwaysReturnSuccess($validated['order_id'], $validated['amount']);
+
             // Make the HTTP POST request to the payment gateway
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->apiKey,
@@ -48,6 +52,7 @@ class PaymentGatewayService
                 'amount' => round($validated['amount'], 2),
                 'timestamp' => $validated['timestamp'] ?? now()->toDateTimeString(),
             ]);
+
 
             if ($response->successful()) {
                 $responseData = $response->json();
@@ -63,5 +68,14 @@ class PaymentGatewayService
         } catch (\Throwable $th) {
             throw $th;
         }
+    }
+
+    private function alwaysReturnSuccess(string $orderId, $amount)
+    {
+        return [
+            'order_id' => $orderId,
+            'amount' => $amount,
+            'status' => 1 //success
+        ];
     }
 }
