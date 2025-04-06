@@ -27,6 +27,11 @@ class CheckRole
         // Define the allowed routes for each role
         $rolePermissions = [
             'admin' => [
+                'login',
+                'logout',
+                'register',
+                'settings',
+                'settings/profile',
                 '/',
                 '/*',
                 'admin',
@@ -35,12 +40,24 @@ class CheckRole
                 'dashboard/*',
                 'user',
                 'user/*',
+                'transactions',
+                'transactions/',
+
             ],
             'user' => [
+                'login',
+                'logout',
+                'register',
+                'settings',
+                'settings/profile',
+                '/',
+                '/*',
                 'dashboard',
-                'profile',
+                'dashboard/*',
                 'user',
-                'user/*'
+                'user/*',
+                'transactions',
+                'transactions/',
             ],
         ];
 
