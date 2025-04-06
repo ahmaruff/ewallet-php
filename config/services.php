@@ -36,7 +36,7 @@ return [
     ],
 
     'payment_gateway' => [
-        'base_url' => env('PAYMENT_GATEWAY_BASE_URL'),
-        'api_key' => env('PAYMENT_GATEWAY_API_KEY'),
+        'base_url' => env('PAYMENT_GATEWAY_BASE_URL', 'http://127.0.0.1'),
+        'api_key' => env('PAYMENT_GATEWAY_API_KEY', 'random-string'),
     ],
 ];
