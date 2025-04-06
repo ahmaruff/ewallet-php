@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Services\PaymentGatewayService;
 use App\Services\WalletService;
 
 test('example', function () {
@@ -10,6 +11,20 @@ test('example', function () {
 });
 
 test('api deposit successfully', function() {
+    // Mock the PaymentGatewayService
+    $paymentGatewayServiceMock = Mockery::mock(PaymentGatewayService::class);
+    $paymentGatewayServiceMock->shouldReceive('deposit')
+        ->once()
+        ->andReturn([
+            'order_id' => '12345',
+            'amount' => 100000,
+            'status' => 1, // Success
+        ]);
+
+    // Bind the mock PaymentGatewayService to the container
+    $this->app->instance(PaymentGatewayService::class, $paymentGatewayServiceMock);
+
+
     $user = User::factory()->create();
     $this->actingAs($user);
     
