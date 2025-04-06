@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem} from '@/types';
 import { Head} from '@inertiajs/vue3';
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
+import TransactionItem from '@/components/TransactionItem.vue'
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -62,10 +63,30 @@ const formatCurrency = (value: number | string) => {
             <CardTitle>Average Transaction</CardTitle>
           </CardHeader>
           <CardContent>
-            <p class="text-lg">{{ props.average_transaction | currency }}</p>
+            <p class="text-lg">{{ props.average_transaction ? formatCurrency(props.average_transaction) : formatCurrency(0) }}</p>
           </CardContent>
         </Card>
       </div>
+
+      <!-- recent -->
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Transaction</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div v-if="props.recent_transactions?.length === 0" class="text-gray-500">
+            No transactions found.
+          </div>
+
+          <ul v-else class="space-y-3">
+            <TransactionItem
+              v-for="transaction in props.recent_transactions"
+              :key="transaction.id"
+              :transaction="transaction"
+            />
+          </ul>
+        </CardContent>
+      </Card>
     </div>
   </AppLayout>
 </template>

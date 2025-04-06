@@ -30,8 +30,8 @@ class DashboardController extends Controller
         $data = [
             'user_count' => $userCount,
             'total_transaction' => $totalTransaction,
-            'recent_transaction' => $recentTransactions,
-            'averageTransaction' => $averageTransaction,
+            'recent_transactions' => $recentTransactions,
+            'average_transaction' => $averageTransaction,
             'is_admin' => $isAdmin,
             'user' => $user,
         ];
