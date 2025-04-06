@@ -6,7 +6,9 @@ use App\Exceptions\Handler;
 use App\Services\AgentService;
 use App\Services\LogService;
 use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,6 +33,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Share the authenticated user globally
+        Inertia::share([
+            'user' => function () {
+                return Auth::check() ? Auth::user()->load('roles') : null;
+            },
+        ]);
     }
 }
