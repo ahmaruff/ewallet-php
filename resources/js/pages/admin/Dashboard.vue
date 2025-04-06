@@ -3,7 +3,6 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem} from '@/types';
 import { Head} from '@inertiajs/vue3';
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
-import TransactionItem from '@/components/TransactionItem.vue'
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
