@@ -51,8 +51,8 @@ class TransactionController extends Controller
         }
 
         $data = [
-            'transactions' => null,
-            'pagination' => null,
+            'transactions' => [],
+            'pagination' => [],
         ];
 
         return Inertia::render('Transaction', $data);
