@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem} from '@/types';
 import { Head} from '@inertiajs/vue3';
 import { Card, CardHeader, CardContent, CardTitle } from '@/components/ui/card';
+import TransactionChart from '@/components/TransactionChart.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -66,6 +67,14 @@ const formatCurrency = (value: number | string) => {
           </CardContent>
         </Card>
       </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Transaction from last 30 days</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <TransactionChart />
+        </CardContent>
+      </Card>
     </div>
   </AppLayout>
 </template>

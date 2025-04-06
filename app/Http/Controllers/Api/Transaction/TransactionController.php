@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api\Transaction;
 
 use App\Commands\ResponseJsonCommand;
 use App\Http\Controllers\Controller;
+use App\Models\Transaction;
 use App\Models\User;
 use App\Services\LogService;
 use App\Services\WalletService;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -130,5 +132,58 @@ class TransactionController extends Controller
         } catch (\Throwable $th) {
             throw $th;
         }        
+    }
+
+    public function getTransctionChart(Request $request)
+    {
+        $userId = $request->query('user_id', null);
+
+        $startDate = $request->query('start_date', null);
+        $endDate = $request->query('end_date', null);
+
+        if(!$startDate) {
+            $startDate = now()->subDays(30)->startOfDay();
+        }
+
+        if(!$endDate) {
+            $endDate = now()->endOfDay();
+        }
+
+        $wallet = null;
+        if($userId) {
+            $user = User::where('id', $userId);
+            $wallet = $user->wallet;
+        }
+
+        $query = Transaction::query();
+
+        if($wallet) {
+            $query->where('wallet_id', $wallet->id);
+        }
+
+        $query->whereBetween('created_at', [$startDate, $endDate])
+            ->selectRaw('DATE(created_at) as date, SUM(amount) as total')
+            ->groupBy('date')
+            ->orderBy('date');
+        
+        $data = $query->get();
+
+        $labels = [];
+        $values = [];
+        $period = CarbonPeriod::create($startDate, $endDate);
+        foreach ($period as $date) {
+            $label = $date->toDateString();
+            $labels[] = $label;
+
+            $daily = $data->firstWhere('date', $label);
+            $values[] = $daily ? (float) $daily->total : 0;
+        }
+
+        $retData = [
+            'labels' => $labels,
+            'data' => $values,
+        ];
+
+        return ResponseJsonCommand::responseSuccess(Response::HTTP_OK, $retData);
     }
 }
